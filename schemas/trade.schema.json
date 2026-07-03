@@ -1,0 +1,184 @@
+{
+  "$defs": {
+    "AssetClass": {
+      "enum": [
+        "equity",
+        "etf",
+        "crypto",
+        "option",
+        "cash"
+      ],
+      "title": "AssetClass",
+      "type": "string"
+    },
+    "OptionDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "underlying": {
+          "title": "Underlying",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/OptionType"
+        },
+        "strike": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Strike"
+        },
+        "expiry": {
+          "title": "Expiry",
+          "type": "string"
+        },
+        "multiplier": {
+          "default": 100,
+          "title": "Multiplier",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "underlying",
+        "type",
+        "strike",
+        "expiry"
+      ],
+      "title": "OptionDetail",
+      "type": "object"
+    },
+    "OptionType": {
+      "enum": [
+        "call",
+        "put"
+      ],
+      "title": "OptionType",
+      "type": "string"
+    },
+    "OrderType": {
+      "enum": [
+        "market",
+        "limit"
+      ],
+      "title": "OrderType",
+      "type": "string"
+    },
+    "TradeAction": {
+      "enum": [
+        "buy",
+        "sell"
+      ],
+      "title": "TradeAction",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "$ref": "#/$defs/TradeAction"
+    },
+    "symbol": {
+      "title": "Symbol",
+      "type": "string"
+    },
+    "quantity": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+          "type": "string"
+        }
+      ],
+      "title": "Quantity"
+    },
+    "order_type": {
+      "$ref": "#/$defs/OrderType",
+      "default": "market"
+    },
+    "limit_price": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Limit Price"
+    },
+    "estimated_price": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Estimated Price"
+    },
+    "asset_class": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AssetClass"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "uses_margin": {
+      "default": false,
+      "title": "Uses Margin",
+      "type": "boolean"
+    },
+    "option": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OptionDetail"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rationale": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rationale"
+    }
+  },
+  "required": [
+    "action",
+    "symbol",
+    "quantity"
+  ],
+  "title": "Trade",
+  "type": "object"
+}

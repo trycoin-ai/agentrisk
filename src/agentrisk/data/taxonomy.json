@@ -1,0 +1,29 @@
+{
+  "version": "2026.07",
+  "source": "AgentRisk curated open taxonomy",
+  "note": "AgentRisk defines its own simple, redistributable classification taxonomy. It is deliberately NOT GICS (which is proprietary and cannot be shipped). Theme-tag membership is subjective by design; this file is the transparent, reviewable source of truth. Callers can override any classification per position.",
+  "sectors": [
+    "technology",
+    "healthcare",
+    "financials",
+    "consumer-discretionary",
+    "consumer-staples",
+    "energy",
+    "industrials",
+    "materials",
+    "utilities",
+    "real-estate",
+    "communication-services"
+  ],
+  "tags": {
+    "ai": "Companies whose valuation is materially driven by artificial-intelligence products, models, or infrastructure.",
+    "semiconductors": "Designers or manufacturers of semiconductor chips and related equipment.",
+    "ev": "Electric-vehicle manufacturers and closely tied suppliers.",
+    "biotech": "Biotechnology and drug-development companies with clinical/pipeline risk.",
+    "fintech": "Financial-technology and digital-payments companies.",
+    "defense": "Aerospace and defense contractors with material government-defense revenue.",
+    "energy-transition": "Renewable energy, clean power, and decarbonization companies.",
+    "crypto": "Direct crypto assets or instruments whose value tracks crypto assets.",
+    "broad-market": "Diversified index or broad-market exchange-traded funds."
+  }
+}

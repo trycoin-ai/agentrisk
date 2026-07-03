@@ -1,0 +1,80 @@
+{
+  "properties": {
+    "totals": {
+      "additionalProperties": true,
+      "title": "Totals",
+      "type": "object"
+    },
+    "positions_by_weight": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Positions By Weight",
+      "type": "array"
+    },
+    "breakdowns": {
+      "additionalProperties": true,
+      "title": "Breakdowns",
+      "type": "object"
+    },
+    "concentration": {
+      "additionalProperties": true,
+      "title": "Concentration",
+      "type": "object"
+    },
+    "top_risks": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Top Risks",
+      "type": "array"
+    },
+    "compliance": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Compliance"
+    },
+    "focus": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Focus"
+    },
+    "data_quality": {
+      "additionalProperties": true,
+      "title": "Data Quality",
+      "type": "object"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "engine": {
+      "additionalProperties": true,
+      "title": "Engine",
+      "type": "object"
+    }
+  },
+  "title": "RiskReport",
+  "type": "object"
+}

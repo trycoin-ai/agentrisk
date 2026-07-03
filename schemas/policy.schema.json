@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "AssetRules": {
+      "additionalProperties": false,
+      "properties": {
+        "crypto": {
+          "$ref": "#/$defs/RuleAction",
+          "default": "allow"
+        },
+        "options": {
+          "$ref": "#/$defs/RuleAction",
+          "default": "allow"
+        },
+        "margin": {
+          "$ref": "#/$defs/RuleAction",
+          "default": "allow"
+        }
+      },
+      "title": "AssetRules",
+      "type": "object"
+    },
+    "DataRules": {
+      "additionalProperties": false,
+      "properties": {
+        "max_snapshot_age_hours": {
+          "default": 24.0,
+          "minimum": 0,
+          "title": "Max Snapshot Age Hours",
+          "type": "number"
+        }
+      },
+      "title": "DataRules",
+      "type": "object"
+    },
+    "Limits": {
+      "additionalProperties": false,
+      "properties": {
+        "max_single_position_pct": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Single Position Pct"
+        },
+        "max_sector_pct": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Max Sector Pct",
+          "type": "object"
+        },
+        "max_tag_pct": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Max Tag Pct",
+          "type": "object"
+        },
+        "max_asset_class_pct": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Max Asset Class Pct",
+          "type": "object"
+        },
+        "warn_at_utilization": {
+          "default": 80.0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Warn At Utilization",
+          "type": "number"
+        }
+      },
+      "title": "Limits",
+      "type": "object"
+    },
+    "OrderRules": {
+      "additionalProperties": false,
+      "properties": {
+        "max_order_pct_of_portfolio": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Order Pct Of Portfolio"
+        },
+        "max_order_value": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Order Value"
+        },
+        "min_cash_pct": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Cash Pct"
+        }
+      },
+      "title": "OrderRules",
+      "type": "object"
+    },
+    "Restricted": {
+      "additionalProperties": false,
+      "properties": {
+        "never_trade": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Never Trade",
+          "type": "array"
+        },
+        "warn_list": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warn List",
+          "type": "array"
+        }
+      },
+      "title": "Restricted",
+      "type": "object"
+    },
+    "RuleAction": {
+      "enum": [
+        "allow",
+        "warn",
+        "block"
+      ],
+      "title": "RuleAction",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "revision": {
+      "default": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "preset": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Preset"
+    },
+    "created_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Created At"
+    },
+    "updated_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Updated At"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    },
+    "limits": {
+      "$ref": "#/$defs/Limits"
+    },
+    "asset_rules": {
+      "$ref": "#/$defs/AssetRules"
+    },
+    "order_rules": {
+      "$ref": "#/$defs/OrderRules"
+    },
+    "restricted": {
+      "$ref": "#/$defs/Restricted"
+    },
+    "data_rules": {
+      "$ref": "#/$defs/DataRules"
+    }
+  },
+  "title": "Policy",
+  "type": "object"
+}

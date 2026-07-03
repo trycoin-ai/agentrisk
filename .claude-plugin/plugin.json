@@ -1,0 +1,12 @@
+{
+  "name": "agentrisk",
+  "version": "0.1.0",
+  "description": "Risk guardrails for AI trading agents. Your agent proposes; your policy decides.",
+  "author": {
+    "name": "Aditya Mehrotra"
+  },
+  "homepage": "https://github.com/trycoin-ai/agentrisk",
+  "repository": "https://github.com/trycoin-ai/agentrisk",
+  "license": "MIT",
+  "keywords": ["trading", "risk", "guardrails", "agents", "mcp", "fintech"]
+}

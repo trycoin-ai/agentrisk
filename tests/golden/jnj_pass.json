@@ -1,0 +1,73 @@
+{
+  "acknowledgements_required": [],
+  "checks": [
+    {
+      "details": {
+        "action": "allow",
+        "kind": "equity"
+      },
+      "id": "asset_rule",
+      "message": "This trade is in an asset class your policy allows.",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "limit_pct": 25,
+        "post_trade_pct": 8.9,
+        "pre_trade_pct": 7.1,
+        "symbol": "JNJ",
+        "utilization_pct": 35.7
+      },
+      "id": "max_single_position",
+      "message": "JNJ stays at 8.9% of your portfolio, under your 25% limit.",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "limit_pct": 10,
+        "order_pct": 1.8,
+        "order_value": 1500.0
+      },
+      "id": "max_order_size",
+      "message": "Order is 1.8% of your portfolio value, within your single-order cap.",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "floor_pct": 5,
+        "post_cash_pct": 7.7
+      },
+      "id": "min_cash",
+      "message": "Cash stays at 7.7%, above your 5% minimum.",
+      "status": "pass"
+    }
+  ],
+  "data_quality": {
+    "snapshot_age_hours": 0.0,
+    "unclassified_pct": 3.6,
+    "warnings": []
+  },
+  "engine": {
+    "agentrisk_version": "0.1.0",
+    "classification_data_version": "2026.07"
+  },
+  "evaluated": {
+    "action": "buy",
+    "order_value": 1500.0,
+    "policy": {
+      "path": null,
+      "revision": 3,
+      "sha256": "04efc92b498b3590040df844497fefff7ee23806c22e051a80df499bf59e47f8",
+      "source": "inline"
+    },
+    "portfolio_as_of": "2026-07-01T15:30:00+00:00",
+    "price_used": 150.0,
+    "quantity": 10.0,
+    "symbol": "JNJ"
+  },
+  "override_rejected": [],
+  "overrides": [],
+  "proceed": true,
+  "summary": "Risk check passed. This trade keeps JNJ at 8.9% of your portfolio, under your 25% single-name limit, and all other policy checks passed.",
+  "verdict": "PASS"
+}

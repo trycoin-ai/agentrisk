@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentrisk"
+version = "0.1.0"
+description = "Risk guardrails for AI trading agents. Your agent proposes; your policy decides."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Aditya Mehrotra" }]
+keywords = ["trading", "risk", "agents", "mcp", "guardrails", "agentic", "fintech"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Financial and Insurance Industry",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Office/Business :: Financial :: Investment",
+  "Typing :: Typed",
+]
+dependencies = [
+  "pydantic>=2.6",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.2.0"]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov",
+  "hypothesis>=6.100",
+  "ruff",
+  "mypy",
+  "types-PyYAML",
+  "mcp>=1.2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/trycoin-ai/agentrisk"
+Repository = "https://github.com/trycoin-ai/agentrisk"
+Documentation = "https://github.com/trycoin-ai/agentrisk/tree/main/docs"
+Changelog = "https://github.com/trycoin-ai/agentrisk/blob/main/CHANGELOG.md"
+Issues = "https://github.com/trycoin-ai/agentrisk/issues"
+
+[project.scripts]
+agentrisk = "agentrisk.cli:main"
+agentrisk-mcp = "agentrisk.mcp_server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentrisk"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/agentrisk",
+  "schemas",
+  "tests",
+  "docs",
+  "examples",
+  "skills",
+  "README.md",
+  "LICENSE",
+  "DISCLAIMER.md",
+  "CHANGELOG.md",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["agentrisk"]
+omit = ["*/mcp_server.py"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+packages = ["agentrisk"]
+ignore_missing_imports = true
+warn_unused_ignores = true

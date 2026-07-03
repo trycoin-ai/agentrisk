@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+coverage.xml
+
+# AgentRisk local state (never commit a user's policy or audit log)
+.agentrisk/
+
+# Internal planning artifacts and demo-recording tooling, kept local only
+plan.html
+plan-skill.md
+PYPI-PLAN.md
+demo/
+*.tape
+*.cast
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

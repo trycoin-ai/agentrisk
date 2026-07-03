@@ -1,0 +1,106 @@
+{
+  "$defs": {
+    "CheckResult": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/CheckStatus"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "message"
+      ],
+      "title": "CheckResult",
+      "type": "object"
+    },
+    "CheckStatus": {
+      "enum": [
+        "pass",
+        "warn",
+        "block",
+        "overridden",
+        "skipped"
+      ],
+      "title": "CheckStatus",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "verdict": {
+      "title": "Verdict",
+      "type": "string"
+    },
+    "proceed": {
+      "title": "Proceed",
+      "type": "boolean"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/CheckResult"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "acknowledgements_required": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Acknowledgements Required",
+      "type": "array"
+    },
+    "overrides": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Overrides",
+      "type": "array"
+    },
+    "override_rejected": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Override Rejected",
+      "type": "array"
+    },
+    "evaluated": {
+      "additionalProperties": true,
+      "title": "Evaluated",
+      "type": "object"
+    },
+    "data_quality": {
+      "additionalProperties": true,
+      "title": "Data Quality",
+      "type": "object"
+    },
+    "engine": {
+      "additionalProperties": true,
+      "title": "Engine",
+      "type": "object"
+    }
+  },
+  "required": [
+    "verdict",
+    "proceed",
+    "summary"
+  ],
+  "title": "Verdict",
+  "type": "object"
+}

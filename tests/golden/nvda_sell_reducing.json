@@ -1,0 +1,91 @@
+{
+  "acknowledgements_required": [],
+  "checks": [
+    {
+      "details": {
+        "action": "allow",
+        "kind": "equity"
+      },
+      "id": "asset_rule",
+      "message": "This trade is in an asset class your policy allows.",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "limit_pct": 25,
+        "post_trade_pct": 20.0,
+        "pre_trade_pct": 28.6,
+        "reducing": true,
+        "symbol": "NVDA",
+        "utilization_pct": 80.0
+      },
+      "id": "max_single_position",
+      "message": "This trade reduces NVDA from 28.6% to 20% of your portfolio, within your 25% limit.",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "key": "technology",
+        "kind": "sector",
+        "limit_pct": 50,
+        "post_trade_pct": 41.4,
+        "pre_trade_pct": 50.0,
+        "utilization_pct": 82.9
+      },
+      "id": "max_sector",
+      "message": "Technology sector exposure stays at 41.4%, under your 50% limit.",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "key": "ai",
+        "kind": "tag",
+        "limit_pct": 50,
+        "post_trade_pct": 39.0,
+        "pre_trade_pct": 47.6,
+        "utilization_pct": 78.1
+      },
+      "id": "max_tag",
+      "message": "Ai theme exposure stays at 39%, under your 50% limit.",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "limit_pct": 10,
+        "order_pct": 8.6,
+        "order_value": 7200.0
+      },
+      "id": "max_order_size",
+      "message": "Order is 8.6% of your portfolio value, within your single-order cap.",
+      "status": "pass"
+    }
+  ],
+  "data_quality": {
+    "snapshot_age_hours": 0.0,
+    "unclassified_pct": 3.6,
+    "warnings": []
+  },
+  "engine": {
+    "agentrisk_version": "0.1.0",
+    "classification_data_version": "2026.07"
+  },
+  "evaluated": {
+    "action": "sell",
+    "order_value": 7200.0,
+    "policy": {
+      "path": null,
+      "revision": 3,
+      "sha256": "04efc92b498b3590040df844497fefff7ee23806c22e051a80df499bf59e47f8",
+      "source": "inline"
+    },
+    "portfolio_as_of": "2026-07-01T15:30:00+00:00",
+    "price_used": 120.0,
+    "quantity": 60.0,
+    "symbol": "NVDA"
+  },
+  "override_rejected": [],
+  "overrides": [],
+  "proceed": true,
+  "summary": "Risk check passed. This sell reduces NVDA from 28.6% to 20% of your portfolio, bringing it back under your 25% limit.",
+  "verdict": "PASS"
+}

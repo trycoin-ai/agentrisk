@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Types (mypy)
+        run: mypy
+      - name: Tests
+        run: pytest --cov=agentrisk --cov-report=term-missing
+      - name: No network calls in the core
+        run: |
+          python - <<'PY'
+          # Import everything first, THEN forbid outbound connections, then exercise
+          # the tools. If the core opened a socket, connect() would raise.
+          import socket
+          from agentrisk import analyze_portfolio_risk, check_trade_risk, generate_risk_policy
+
+          def _deny(*a, **k):
+              raise AssertionError("core attempted a network connection")
+
+          socket.socket.connect = _deny            # type: ignore[method-assign]
+          socket.create_connection = _deny          # type: ignore[assignment]
+
+          pf = {"as_of": "2026-07-01T15:30:00Z", "cash": 1000,
+                "positions": [{"symbol": "NVDA", "quantity": 1, "price": 100}]}
+          pol = {"limits": {"max_single_position_pct": 25}}
+          analyze_portfolio_risk(pf, policy=pol)
+          check_trade_risk(pf, {"action": "buy", "symbol": "NVDA", "quantity": 1,
+                                "order_type": "market", "estimated_price": 100},
+                           policy=pol, audit=False)
+          print("core ran with outbound connections forbidden: OK")
+          PY
+
+  package:
+    name: Build and verify the distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+      - name: Check package metadata
+        run: twine check dist/*
+      - name: Install the wheel in a clean venv and exercise it
+        run: |
+          python -m venv /tmp/verify
+          /tmp/verify/bin/pip install "$(ls dist/*.whl)"
+          /tmp/verify/bin/python - <<'PY'
+          # The bundled classification data must ship inside the wheel; nothing else
+          # in the suite proves that, because the tests import from the source tree.
+          from importlib import resources
+          for name in ("classifications.json", "taxonomy.json"):
+              assert resources.files("agentrisk.data").joinpath(name).is_file(), f"wheel is missing {name}"
+
+          from agentrisk import check_trade_risk
+          pf = {"as_of": "2026-07-01T15:30:00Z", "cash": 8000,
+                "positions": [{"symbol": "NVDA", "quantity": 200, "price": 120}]}
+          pol = {"limits": {"max_single_position_pct": 25}}
+          v = check_trade_risk(pf, {"action": "buy", "symbol": "NVDA", "quantity": 20,
+                                    "order_type": "market", "estimated_price": 120},
+                               policy=pol, audit=False)
+          assert v.verdict == "BLOCK", v.verdict
+          print("installed wheel imports, bundles its data, and blocks an over-limit trade: OK")
+          PY

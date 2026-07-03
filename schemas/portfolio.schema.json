@@ -1,0 +1,199 @@
+{
+  "$defs": {
+    "AssetClass": {
+      "enum": [
+        "equity",
+        "etf",
+        "crypto",
+        "option",
+        "cash"
+      ],
+      "title": "AssetClass",
+      "type": "string"
+    },
+    "OptionDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "underlying": {
+          "title": "Underlying",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/OptionType"
+        },
+        "strike": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Strike"
+        },
+        "expiry": {
+          "title": "Expiry",
+          "type": "string"
+        },
+        "multiplier": {
+          "default": 100,
+          "title": "Multiplier",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "underlying",
+        "type",
+        "strike",
+        "expiry"
+      ],
+      "title": "OptionDetail",
+      "type": "object"
+    },
+    "OptionType": {
+      "enum": [
+        "call",
+        "put"
+      ],
+      "title": "OptionType",
+      "type": "string"
+    },
+    "Position": {
+      "additionalProperties": false,
+      "properties": {
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "price": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Price"
+        },
+        "asset_class": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssetClass"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sector": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sector"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "option": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "symbol",
+        "quantity",
+        "price"
+      ],
+      "title": "Position",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "base_currency": {
+      "default": "USD",
+      "title": "Base Currency",
+      "type": "string"
+    },
+    "cash": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+          "type": "string"
+        }
+      ],
+      "default": "0",
+      "title": "Cash"
+    },
+    "positions": {
+      "items": {
+        "$ref": "#/$defs/Position"
+      },
+      "title": "Positions",
+      "type": "array"
+    },
+    "total_value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Total Value"
+    }
+  },
+  "required": [
+    "as_of"
+  ],
+  "title": "Portfolio",
+  "type": "object"
+}

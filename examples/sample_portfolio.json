@@ -1,0 +1,16 @@
+{
+  "as_of": "2026-07-02T15:30:00Z",
+  "base_currency": "USD",
+  "cash": 8000,
+  "positions": [
+    {"symbol": "NVDA", "quantity": 200, "price": 120},
+    {"symbol": "MSFT", "quantity": 25, "price": 400},
+    {"symbol": "SPY", "quantity": 16, "price": 500},
+    {"symbol": "AAPL", "quantity": 40, "price": 200},
+    {"symbol": "AMZN", "quantity": 40, "price": 150},
+    {"symbol": "BTC", "quantity": 0.1, "price": 60000},
+    {"symbol": "JNJ", "quantity": 40, "price": 150},
+    {"symbol": "XOM", "quantity": 50, "price": 100},
+    {"symbol": "ACME", "quantity": 100, "price": 30}
+  ]
+}

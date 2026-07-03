@@ -1,0 +1,58 @@
+name: Add or correct an instrument
+description: Add a missing ticker to the bundled classification dataset, or fix its sector/tags.
+title: "[data] <TICKER>: add or correct classification"
+labels: ["classification-data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this to add a missing instrument to AgentRisk's bundled classification
+        dataset, or to correct one. Most listed tickers already resolve to an asset
+        class and name; sector and theme tags are hand-curated, so those are the most
+        common things to add. A caller can always override any classification per
+        position, so this is about improving the shared defaults.
+  - type: input
+    id: symbol
+    attributes:
+      label: Symbol (ticker)
+      placeholder: e.g. SMR
+    validations:
+      required: true
+  - type: dropdown
+    id: asset_class
+    attributes:
+      label: Asset class
+      options:
+        - equity
+        - etf
+        - crypto
+        - option
+        - cash
+    validations:
+      required: true
+  - type: input
+    id: sector
+    attributes:
+      label: Sector (optional)
+      description: Must be one of the sectors in src/agentrisk/data/taxonomy.json. Leave blank if unsure.
+      placeholder: e.g. energy
+  - type: input
+    id: tags
+    attributes:
+      label: Theme tags (optional)
+      description: Comma-separated, drawn from the taxonomy (e.g. ai, ev, energy-transition).
+      placeholder: e.g. energy-transition
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale / source
+      description: A short justification, especially for theme tags, which are subjective.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: The sector (if given) exists in taxonomy.json
+        - label: The tags (if given) exist in taxonomy.json

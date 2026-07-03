@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "agentrisk": {
+      "command": "uvx",
+      "args": ["--from", "agentrisk[mcp] @ git+https://github.com/trycoin-ai/agentrisk.git", "agentrisk-mcp"]
+    }
+  }
+}
