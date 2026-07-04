@@ -6,6 +6,14 @@ All notable changes to AgentRisk are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- The bundled MCP configuration and the Claude Desktop setup install the server
+  from the published PyPI package (`agentrisk[mcp]`) instead of the GitHub
+  repository. AgentRisk owns the name on PyPI, so resolving it from the index no
+  longer risks a dependency-confusion substitution.
+
+## [0.1.0] - 2026-07-04
+
 ### Added
 - Initial implementation of the three core tools:
   - `analyze_portfolio_risk`: concentration report, exposure breakdowns
@@ -61,3 +69,4 @@ All notable changes to AgentRisk are documented here. The format follows
   repository instead of resolving an unpinned name from a package index.
 
 [Unreleased]: https://github.com/trycoin-ai/agentrisk
+[0.1.0]: https://pypi.org/project/agentrisk/0.1.0/

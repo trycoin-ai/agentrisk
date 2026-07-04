@@ -67,8 +67,7 @@ def test_marketplace_lists_the_plugin():
 def test_mcp_server_runs_via_uvx():
     server = json.loads(MCP_CONFIG.read_text("utf-8"))["mcpServers"]["agentrisk"]
     assert server["command"] == "uvx"
-    # The server resolves from this project's own repository, never an unpinned
-    # name a package index could satisfy with someone else's artifact. Once the
-    # package is published this should pin the released version instead.
+    # The server resolves from the published PyPI package, whose name this project
+    # owns, so a package index cannot satisfy it with someone else's artifact.
     from_spec = server["args"][server["args"].index("--from") + 1]
-    assert from_spec == "agentrisk[mcp] @ git+https://github.com/trycoin-ai/agentrisk.git", from_spec
+    assert from_spec == "agentrisk[mcp]", from_spec

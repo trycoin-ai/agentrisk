@@ -1,0 +1,33 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.trycoin-ai/agentrisk",
+  "description": "Risk guardrails for AI trading agents. Your agent proposes; your policy decides.",
+  "repository": {
+    "url": "https://github.com/trycoin-ai/agentrisk",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "agentrisk",
+      "version": "0.1.1",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeArguments": [
+        {
+          "type": "named",
+          "name": "--from",
+          "value": "agentrisk[mcp]"
+        },
+        {
+          "type": "positional",
+          "value": "agentrisk-mcp"
+        }
+      ]
+    }
+  ]
+}

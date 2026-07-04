@@ -7,7 +7,7 @@ structured tool calls, with no natural-language parsing inside AgentRisk.
 ## 1. Install
 
 ```bash
-pip install "agentrisk[mcp] @ git+https://github.com/trycoin-ai/agentrisk.git"
+pip install "agentrisk[mcp]"
 ```
 
 ## 2. Register the server
@@ -36,7 +36,7 @@ If you prefer `uv` to manage the server without a pip install, use this instead:
   "mcpServers": {
     "agentrisk": {
       "command": "uvx",
-      "args": ["--from", "agentrisk[mcp] @ git+https://github.com/trycoin-ai/agentrisk.git", "agentrisk-mcp"]
+      "args": ["--from", "agentrisk[mcp]", "agentrisk-mcp"]
     }
   }
 }

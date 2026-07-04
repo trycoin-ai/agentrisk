@@ -138,3 +138,5 @@ no LLM calls, no hidden state.
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+<!-- mcp-name: io.github.trycoin-ai/agentrisk -->
