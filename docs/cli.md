@@ -3,9 +3,24 @@
 The `agentrisk` command wraps the three tools for shell and CI use. It reads a
 portfolio from a JSON file (or `-` for stdin) and a policy from a file or the
 default location (`./.agentrisk/policy.yaml`, overridable with `AGENTRISK_HOME` or
-`--policy`). It is installed with the package (see the README's Installation section).
+`--policy`). It is installed with the package (`pip install agentrisk`).
 
 Colors are used on a terminal and disabled when output is piped or `NO_COLOR` is set.
+
+## Try it
+
+Run all three commands against the bundled example portfolio from a checkout:
+
+```bash
+git clone https://github.com/trycoin-ai/agentrisk.git && cd agentrisk
+pip install -e .
+agentrisk policy init --preset balanced --max-position 25 --block crypto --block margin --warn options
+agentrisk check buy 20 NVDA --at 120 --portfolio examples/sample_portfolio.json
+agentrisk analyze examples/sample_portfolio.json --focus tag:ai
+```
+
+The `check` command exits non-zero here because the buy breaks the 25% single-name
+limit.
 
 ## `agentrisk policy`
 
