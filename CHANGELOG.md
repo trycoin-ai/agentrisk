@@ -6,11 +6,19 @@ All notable changes to AgentRisk are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-04
+
 ### Changed
 - The bundled MCP configuration and the Claude Desktop setup install the server
   from the published PyPI package (`agentrisk[mcp]`) instead of the GitHub
   repository. AgentRisk owns the name on PyPI, so resolving it from the index no
   longer risks a dependency-confusion substitution.
+- Internal refactor: the trade-check module is split into `checks.py` (the rule
+  catalog), `overrides.py` (one-time bypass tiering), and `check.py` (simulation
+  and the entry point), with no change to any verdict.
+
+### Added
+- A PyPI trusted-publishing workflow and MCP registry metadata (`server.json`).
 
 ## [0.1.0] - 2026-07-04
 
@@ -69,4 +77,5 @@ All notable changes to AgentRisk are documented here. The format follows
   repository instead of resolving an unpinned name from a package index.
 
 [Unreleased]: https://github.com/trycoin-ai/agentrisk
+[0.1.1]: https://pypi.org/project/agentrisk/0.1.1/
 [0.1.0]: https://pypi.org/project/agentrisk/0.1.0/

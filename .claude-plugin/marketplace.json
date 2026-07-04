@@ -9,7 +9,7 @@
       "name": "agentrisk",
       "source": ".",
       "description": "Risk guardrails for AI trading agents. Your agent proposes; your policy decides.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Aditya Mehrotra"
       }
