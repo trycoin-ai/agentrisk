@@ -29,8 +29,9 @@ foundation                             models.py   data/            messages.py
   concentration, and per-bucket exposure. This is the shared arithmetic that both
   engines build on.
 - **check.py** and **analyze.py** are the two engines. `check.py` simulates the
-  post-trade portfolio, runs each rule, tiers any blocks for override, and returns a
-  `Verdict`. `analyze.py` produces a read-only `RiskReport`. Neither writes anything.
+  post-trade portfolio, runs the rule catalog in **checks.py**, tiers any blocks for
+  override via **overrides.py**, and returns a `Verdict`. `analyze.py` produces a
+  read-only `RiskReport`. Neither writes anything.
 - **policy.py** is the policy lifecycle (create, update, show). Updates return a diff
   that flags loosening changes and only write on confirm. It uses **store.py** for
   atomic writes and revision history and **audit.py** for the append-only log.
@@ -53,7 +54,8 @@ foundation                             models.py   data/            messages.py
 
 | If you are changing... | Edit |
 | --- | --- |
-| A risk rule or the verdict math | `check.py` (and `exposures.py` if it is a new exposure) |
+| A risk rule | `checks.py` (and `exposures.py` if it is a new exposure) |
+| The verdict aggregation or override tiering | `check.py` and `overrides.py` |
 | A report section | `analyze.py` |
 | Any wording a user sees | `messages.py` |
 | A policy field or the diff logic | `models.py` and `policy.py` |

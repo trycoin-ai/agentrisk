@@ -46,7 +46,10 @@ Unexplained golden diffs mean you broke something.
 ## Layout
 
 - `src/agentrisk/models.py`: pydantic schemas, strict validation, Decimal money.
-- `src/agentrisk/check.py`: trade simulation and the check catalog.
+- `src/agentrisk/check.py`: trade simulation, aggregation, and the `check_trade_risk`
+  entry point.
+- `src/agentrisk/checks.py`: the risk-check catalog, one function per rule.
+- `src/agentrisk/overrides.py`: one-time override tiering and application.
 - `src/agentrisk/analyze.py`: portfolio report and compliance audit.
 - `src/agentrisk/policy.py`: policy lifecycle, diff, confirm gate, history.
 - `src/agentrisk/mcp_server.py`: thin MCP adapter; contains no business logic.
