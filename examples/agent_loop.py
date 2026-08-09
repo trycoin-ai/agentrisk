@@ -13,12 +13,18 @@ from __future__ import annotations
 
 import json
 import tempfile
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from agentrisk import check_trade_risk, generate_risk_policy
 
 HERE = Path(__file__).parent
 PORTFOLIO = json.loads((HERE / "sample_portfolio.json").read_text())
+
+# The bundled file keeps a fixed as_of so it stays a stable example elsewhere in
+# the docs. Restamp it a couple of hours back here, or the snapshot ages past the
+# policy's staleness window and every verdict below picks up a stale-data warning.
+PORTFOLIO["as_of"] = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
 
 
 def execute(trade: dict) -> str:

@@ -22,6 +22,17 @@ agentrisk analyze examples/sample_portfolio.json --focus tag:ai
 The `check` command exits non-zero here because the buy breaks the 25% single-name
 limit.
 
+`examples/sample_portfolio.json` carries a fixed `as_of` date so its numbers stay
+stable across the docs, which means these commands also report the snapshot as
+stale. That warning is about the sample file's age, not the trade. To follow along
+without it, stamp a copy with the current time first:
+
+```bash
+python -c "import json,datetime;p=json.load(open('examples/sample_portfolio.json'));p['as_of']=datetime.datetime.now(datetime.timezone.utc).isoformat();json.dump(p,open('portfolio.json','w'),indent=2)"
+```
+
+then pass `portfolio.json` to the commands below.
+
 ## `agentrisk policy`
 
 Create or show your risk policy.
