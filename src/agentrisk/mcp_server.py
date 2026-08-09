@@ -22,15 +22,45 @@ _INSTRUCTIONS = (
 )
 
 
+MCP_MISSING = (
+    "The MCP server needs the 'mcp' package. Install agentrisk with its "
+    "[mcp] extra (see the README's Installation section)."
+)
+
+
+def _installed_mcp_version() -> str:
+    """Best-effort version of the installed mcp package, for the error message."""
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        return version("mcp")
+    except PackageNotFoundError:
+        return "unknown"
+
+
+def _incompatible_mcp_message() -> str:
+    """Explain that mcp is installed but too new, which is not a missing extra."""
+    return (
+        f"The installed 'mcp' package (version {_installed_mcp_version()}) does not "
+        "provide mcp.server.fastmcp, which this release of AgentRisk is built on. "
+        "AgentRisk supports mcp>=1.2.0,<2. Reinstall a supported version with: "
+        'pip install --upgrade "agentrisk[mcp]"'
+    )
+
+
 def build_server() -> Any:
     """Construct the FastMCP server (imported lazily so the core needs no MCP dep)."""
     try:
+        import mcp as _mcp_pkg  # noqa: F401
+    except ImportError as exc:
+        raise SystemExit(MCP_MISSING) from exc
+
+    # The package is present, so a failure here means a version whose layout we do
+    # not support. Saying "install the extra" would send the user in circles.
+    try:
         from mcp.server.fastmcp import FastMCP
-    except ImportError as exc:  # pragma: no cover
-        raise SystemExit(
-            "The MCP server needs the 'mcp' package. Install agentrisk with its "
-            "[mcp] extra (see the README's Installation section)."
-        ) from exc
+    except ImportError as exc:
+        raise SystemExit(_incompatible_mcp_message()) from exc
 
     mcp = FastMCP("agentrisk", instructions=_INSTRUCTIONS)
 
