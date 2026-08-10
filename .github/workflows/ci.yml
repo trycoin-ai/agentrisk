@@ -4,6 +4,11 @@ on:
   push:
     branches: [main, dev]
   pull_request:
+  # Dependencies move even when the code does not. A published release broke once
+  # because an unpinned SDK shipped a new major between pushes and nothing ran.
+  schedule:
+    - cron: "23 6 * * 1"
+  workflow_dispatch:
 
 jobs:
   test:
@@ -11,11 +16,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install
@@ -32,8 +37,12 @@ jobs:
         run: |
           python - <<'PY'
           # Import everything first, THEN forbid outbound connections, then exercise
-          # the tools. If the core opened a socket, connect() would raise.
+          # the tools. If the core opened a socket, connect() would raise. This
+          # covers the paths it exercises, so run all three tools, including the one
+          # that writes a policy and an audit record.
           import socket
+          import tempfile
+          from pathlib import Path
           from agentrisk import analyze_portfolio_risk, check_trade_risk, generate_risk_policy
 
           def _deny(*a, **k):
@@ -49,15 +58,42 @@ jobs:
           check_trade_risk(pf, {"action": "buy", "symbol": "NVDA", "quantity": 1,
                                 "order_type": "market", "estimated_price": 100},
                            policy=pol, audit=False)
-          print("core ran with outbound connections forbidden: OK")
+          with tempfile.TemporaryDirectory() as tmp:
+              written = generate_risk_policy("create", preset="balanced", confirm=True,
+                                             policy_path=str(Path(tmp) / "policy.yaml"))
+              assert written.written, written.message
+          print("all three tools ran with outbound connections forbidden: OK")
           PY
+
+  mcp-sdk-canary:
+    name: Newest MCP SDK (advisory)
+    runs-on: ubuntu-latest
+    # Drift monitoring, not a merge gate. It fails the same way on every pull
+    # request until the server is ported to the 2.x API, which is noise on a
+    # review page, so it runs on the schedule and on demand instead.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install, then deliberately lift the mcp ceiling
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install --upgrade "mcp"
+      - name: Report the SDK under test
+        run: pip show mcp | head -2
+      - name: Exercise the server against it
+        run: pytest tests/test_mcp_contract.py tests/test_mcp_startup.py
 
   package:
     name: Build and verify the distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Build sdist and wheel
