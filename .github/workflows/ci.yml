@@ -68,8 +68,10 @@ jobs:
   mcp-sdk-canary:
     name: Newest MCP SDK (advisory)
     runs-on: ubuntu-latest
-    # Expected to fail until the server is ported to the 2.x API. It is here to
-    # report the state of the newest SDK, not to gate merges, so it never blocks.
+    # Drift monitoring, not a merge gate. It fails the same way on every pull
+    # request until the server is ported to the 2.x API, which is noise on a
+    # review page, so it runs on the schedule and on demand instead.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     continue-on-error: true
     steps:
       - uses: actions/checkout@v7
