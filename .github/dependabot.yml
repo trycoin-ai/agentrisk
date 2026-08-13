@@ -8,6 +8,14 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 5
+    ignore:
+      # The ceiling on mcp is deliberate, not staleness: the 2.x SDK removed
+      # mcp.server.fastmcp, which the server is built on. Raising it is a port,
+      # not a version bump, so a weekly pull request offering to widen the range
+      # is noise that reintroduces a shipped bug. The advisory canary in ci.yml
+      # is what reports when the newer SDK becomes viable.
+      - dependency-name: "mcp"
+        update-types: ["version-update:semver-major"]
     groups:
       dev-dependencies:
         patterns:
