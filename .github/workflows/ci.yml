@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
   pull_request:
   # Dependencies move even when the code does not. A published release broke once
   # because an unpinned SDK shipped a new major between pushes and nothing ran.

@@ -6,6 +6,38 @@ All notable changes to AgentRisk are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-08-10
+
+### Fixed
+- The `mcp` extra is now capped below the 2.x SDK. The 2.x release removed
+  `mcp.server.fastmcp`, which the server is built on, and the extra was declared
+  as an open range, so a fresh install of 0.1.1 resolved the new SDK and
+  `agentrisk-mcp` exited before starting. This affected the documented quickstart,
+  the Claude Code plugin, and the registry listing, which all launch the same
+  command. Lifting the cap requires porting the server to the 2.x API.
+- The MCP server now tells a missing `mcp` package apart from an installed one
+  whose layout it does not support. The previous message asked the user to install
+  the extra they already had.
+- `examples/agent_loop.py` stamps the sample snapshot at runtime. The bundled
+  snapshot carries a fixed `as_of`, so once it aged past the staleness window every
+  trade in the example picked up a stale-data warning and three of its five inline
+  verdict comments no longer matched what it printed.
+
+### Added
+- Python 3.14 to the test matrix and the classifiers.
+- A weekly scheduled CI run. The SDK break above shipped between pushes and went
+  unnoticed because nothing exercised the dependency set in the meantime.
+- An advisory CI job that installs the newest MCP SDK and reports whether the
+  server still works against it. It runs on the schedule, not on pull requests.
+- `tests/test_examples.py`, which runs the example and asserts its verdicts, so a
+  drifting example fails the suite.
+- `tests/test_version_consistency.py`, which discovers every recorded version
+  across the packaging metadata, manifests, and golden fixtures and reports the
+  full set when they disagree.
+- A Dependabot configuration for pip and GitHub Actions, grouped weekly.
+- The publish workflow now refuses to upload when the pushed tag disagrees with
+  the package version.
+
 ## [0.1.1] - 2026-07-04
 
 ### Changed
@@ -77,5 +109,6 @@ All notable changes to AgentRisk are documented here. The format follows
   repository instead of resolving an unpinned name from a package index.
 
 [Unreleased]: https://github.com/trycoin-ai/agentrisk
+[0.1.2]: https://pypi.org/project/agentrisk/0.1.2/
 [0.1.1]: https://pypi.org/project/agentrisk/0.1.1/
 [0.1.0]: https://pypi.org/project/agentrisk/0.1.0/
