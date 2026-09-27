@@ -1,4 +1,4 @@
-name: Publish to PyPI
+name: Publish
 
 on:
   push:
@@ -36,3 +36,54 @@ jobs:
         run: twine check dist/*
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  registry:
+    name: Publish to the MCP registry
+    # Runs only after PyPI succeeds: the registry validates that the version
+    # exists on the index, so publishing first would fail that check. This also
+    # means the pypi environment approval gates the registry step too.
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      # OIDC authenticates as this repository, which is what proves the
+      # io.github.trycoin-ai/* namespace. No personal token is involved, so the
+      # organization's third-party application policy has nothing to block.
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify the tag matches server.json
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          top="$(python -c "import json; print(json.load(open('server.json'))['version'])")"
+          pkg="$(python -c "import json; print(json.load(open('server.json'))['packages'][0]['version'])")"
+          if [ "$tag" != "$top" ] || [ "$tag" != "$pkg" ]; then
+            echo "tag $GITHUB_REF_NAME disagrees with server.json ($top, package $pkg)"
+            exit 1
+          fi
+          echo "tag $GITHUB_REF_NAME matches server.json"
+      - name: Wait for the version to appear on PyPI
+        # Publishing to the index and the index serving that version are not the
+        # same instant, and the registry rejects a version it cannot resolve.
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for attempt in $(seq 1 30); do
+            if curl -sf "https://pypi.org/pypi/agentrisk/${version}/json" >/dev/null; then
+              echo "agentrisk ${version} is resolvable on PyPI"
+              exit 0
+            fi
+            echo "attempt ${attempt}: not visible yet, waiting"
+            sleep 10
+          done
+          echo "agentrisk ${version} never became resolvable on PyPI"
+          exit 1
+      - name: Install mcp-publisher
+        run: |
+          curl -sSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" \
+            | tar xz mcp-publisher
+      - name: Validate server.json
+        run: ./mcp-publisher validate
+      - name: Authenticate with the registry
+        run: ./mcp-publisher login github-oidc
+      - name: Publish
+        run: ./mcp-publisher publish
