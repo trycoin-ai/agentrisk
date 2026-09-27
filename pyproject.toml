@@ -32,9 +32,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Capped below 2.0: the 2.x SDK dropped mcp.server.fastmcp, which the server is
-# built on. Lifting the cap requires porting mcp_server.py to the 2.x API.
-mcp = ["mcp>=1.2.0,<2"]
+# Capped below the next major: a new major of the SDK has broken the server before
+# (2.0 removed mcp.server.fastmcp), so the ceiling moves only after the server is
+# checked against the new API. Both the 1.x and 2.x layouts are supported.
+mcp = ["mcp>=1.2.0,<3"]
 dev = [
   "pytest>=8.0",
   "pytest-cov",
@@ -42,7 +43,7 @@ dev = [
   "ruff",
   "mypy",
   "types-PyYAML",
-  "mcp>=1.2.0,<2",
+  "mcp>=1.2.0,<3",
 ]
 
 [project.urls]

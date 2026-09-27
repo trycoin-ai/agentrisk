@@ -38,18 +38,45 @@ def _installed_mcp_version() -> str:
         return "unknown"
 
 
+# The range the packaging extra declares. The startup message quotes it, and a
+# test keeps the two in step.
+SUPPORTED_MCP = "mcp>=1.2.0,<3"
+
+
 def _incompatible_mcp_message() -> str:
-    """Explain that mcp is installed but too new, which is not a missing extra."""
+    """Explain that mcp is installed but unsupported, which is not a missing extra."""
     return (
-        f"The installed 'mcp' package (version {_installed_mcp_version()}) does not "
-        "provide mcp.server.fastmcp, which this release of AgentRisk is built on. "
-        "AgentRisk supports mcp>=1.2.0,<2. Reinstall a supported version with: "
+        f"The installed 'mcp' package (version {_installed_mcp_version()}) provides "
+        "neither mcp.server.mcpserver (the 2.x SDK) nor mcp.server.fastmcp (the 1.x "
+        f"SDK), one of which this release of AgentRisk needs. AgentRisk supports "
+        f"{SUPPORTED_MCP}. Reinstall a supported version with: "
         'pip install --upgrade "agentrisk[mcp]"'
     )
 
 
+def _server_class() -> Any:
+    """Return the decorator-style server class from whichever SDK is installed.
+
+    The 2.x SDK renamed FastMCP to MCPServer and moved it. The constructor, the
+    ``tool()`` decorator, and ``run()`` kept their shape, so the server below is
+    written once against that shape and only this lookup knows about the rename.
+    Raises ImportError when neither layout is present.
+    """
+    try:
+        from mcp.server.mcpserver import MCPServer
+    except ImportError:
+        pass
+    else:
+        return MCPServer
+    # The 2.x SDK keeps a mcp.server.fastmcp stub that raises on import, so under
+    # it mypy sees a module with no FastMCP; under 1.x the ignore is unused.
+    from mcp.server.fastmcp import FastMCP  # type: ignore[attr-defined,unused-ignore]
+
+    return FastMCP
+
+
 def build_server() -> Any:
-    """Construct the FastMCP server (imported lazily so the core needs no MCP dep)."""
+    """Construct the MCP server (imported lazily so the core needs no MCP dep)."""
     try:
         import mcp as _mcp_pkg  # noqa: F401
     except ImportError as exc:
@@ -58,11 +85,11 @@ def build_server() -> Any:
     # The package is present, so a failure here means a version whose layout we do
     # not support. Saying "install the extra" would send the user in circles.
     try:
-        from mcp.server.fastmcp import FastMCP
+        server_class = _server_class()
     except ImportError as exc:
         raise SystemExit(_incompatible_mcp_message()) from exc
 
-    mcp = FastMCP("agentrisk", instructions=_INSTRUCTIONS)
+    mcp = server_class("agentrisk", instructions=_INSTRUCTIONS)
 
     @mcp.tool()
     def analyze_portfolio_risk(

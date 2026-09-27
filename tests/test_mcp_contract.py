@@ -20,6 +20,13 @@ def _tools():
     return {t.name: t for t in asyncio.run(server.list_tools())}
 
 
+def _input_schema(tool) -> dict:
+    # The 2.x SDK renamed the model field to input_schema; the wire name is
+    # unchanged, so the schema itself is compared the same way on both.
+    schema = getattr(tool, "input_schema", None)
+    return schema if schema is not None else tool.inputSchema
+
+
 def test_three_tools_registered():
     tools = _tools()
     assert set(tools) == {
@@ -31,9 +38,10 @@ def test_three_tools_registered():
 
 def test_check_trade_risk_schema():
     tool = _tools()["check_trade_risk"]
-    props = tool.inputSchema["properties"]
+    schema = _input_schema(tool)
+    props = schema["properties"]
     assert "portfolio" in props and "trade" in props
-    assert set(tool.inputSchema.get("required", [])) >= {"portfolio", "trade"}
+    assert set(schema.get("required", [])) >= {"portfolio", "trade"}
 
 
 def test_tools_have_agent_facing_descriptions():

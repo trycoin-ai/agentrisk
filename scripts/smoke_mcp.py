@@ -38,8 +38,12 @@ SAMPLE_PORTFOLIO = {
 
 def _payload(result) -> dict:
     """Pull the JSON dict out of a CallToolResult (structured or text content)."""
-    if getattr(result, "structuredContent", None):
-        return result.structuredContent
+    # The 2.x client model renamed the field; accept either spelling.
+    structured = getattr(result, "structured_content", None)
+    if structured is None:
+        structured = getattr(result, "structuredContent", None)
+    if structured:
+        return structured
     for block in result.content:
         if getattr(block, "text", None):
             return json.loads(block.text)
