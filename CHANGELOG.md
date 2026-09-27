@@ -6,6 +6,19 @@ All notable changes to AgentRisk are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+- The MCP server runs on the 2.x SDK. That release renamed `FastMCP` to
+  `MCPServer` and moved it to `mcp.server.mcpserver`; the adapter now imports
+  whichever of the two layouts is installed, and the `mcp` extra accepts
+  `mcp>=1.2.0,<3`. A fresh `uvx --from "agentrisk[mcp]" agentrisk-mcp` therefore
+  resolves the current SDK again instead of the 1.x line.
+- The unsupported-SDK startup message names both server modules it looked for
+  and the range it supports.
+
+### Added
+- A CI job that installs the newest 1.x SDK, so the older layout stays covered
+  now that a fresh install resolves 2.x.
+
 ## [0.1.2] - 2026-08-10
 
 ### Fixed

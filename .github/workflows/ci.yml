@@ -68,8 +68,9 @@ jobs:
   mcp-sdk-canary:
     name: Newest MCP SDK (advisory)
     runs-on: ubuntu-latest
-    # Drift monitoring, not a merge gate. It fails the same way on every pull
-    # request until the server is ported to the 2.x API, which is noise on a
+    # Drift monitoring, not a merge gate. It installs whatever the newest SDK is,
+    # ceiling or not, so it is the first thing to fail when the next major lands.
+    # That failure persists until the server is ported, which is noise on a
     # review page, so it runs on the schedule and on demand instead.
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     continue-on-error: true
@@ -83,6 +84,26 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
           pip install --upgrade "mcp"
+      - name: Report the SDK under test
+        run: pip show mcp | head -2
+      - name: Exercise the server against it
+        run: pytest tests/test_mcp_contract.py tests/test_mcp_startup.py
+
+  mcp-sdk-1x:
+    name: Newest 1.x MCP SDK
+    runs-on: ubuntu-latest
+    # A fresh install now resolves the 2.x SDK, so without this the 1.x layout the
+    # server also supports would only be exercised on machines that happen to
+    # have it pinned.
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install with the 1.x SDK
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]" "mcp<2"
       - name: Report the SDK under test
         run: pip show mcp | head -2
       - name: Exercise the server against it
