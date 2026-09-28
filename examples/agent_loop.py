@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import json
 import tempfile
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from agentrisk import check_trade_risk, generate_risk_policy
@@ -25,6 +25,18 @@ PORTFOLIO = json.loads((HERE / "sample_portfolio.json").read_text())
 # the docs. Restamp it a couple of hours back here, or the snapshot ages past the
 # policy's staleness window and every verdict below picks up a stale-data warning.
 PORTFOLIO["as_of"] = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
+
+
+def _third_friday_next_year(today: date) -> date:
+    """A standard monthly options expiry about a year out."""
+    first = date(today.year + 1, today.month, 1)
+    return first.replace(day=1 + (4 - first.weekday()) % 7 + 14)
+
+
+# Same reasoning as as_of above: a fixed expiry would eventually be in the past,
+# and an example that trades an expired contract teaches the wrong thing.
+OPTION_EXPIRY = _third_friday_next_year(datetime.now(timezone.utc).date())
+OPTION_SYMBOL = f"NVDA{OPTION_EXPIRY:%y%m%d}C00200000"
 
 
 def execute(trade: dict) -> str:
@@ -85,10 +97,10 @@ def main() -> None:
              "estimated_price": 120},                                            # BLOCK (concentration)
             {"action": "buy", "symbol": "BTC", "quantity": 0.05, "order_type": "market",
              "estimated_price": 60000, "asset_class": "crypto"},                 # BLOCK (crypto)
-            {"action": "buy", "symbol": "NVDA260918C00200000", "quantity": 2,
+            {"action": "buy", "symbol": OPTION_SYMBOL, "quantity": 2,
              "order_type": "market", "estimated_price": 8.40, "asset_class": "option",
              "option": {"underlying": "NVDA", "type": "call", "strike": 200,
-                        "expiry": "2026-09-18"}},                                # WARN (options)
+                        "expiry": OPTION_EXPIRY.isoformat()}},                   # WARN (options)
             {"action": "sell", "symbol": "NVDA", "quantity": 60, "order_type": "market",
              "estimated_price": 120},                                            # PASS (reduces breach)
         ]
