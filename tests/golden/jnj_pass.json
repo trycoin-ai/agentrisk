@@ -48,7 +48,7 @@
     "warnings": []
   },
   "engine": {
-    "agentrisk_version": "0.1.2",
+    "agentrisk_version": "0.1.3",
     "classification_data_version": "2026.09"
   },
   "evaluated": {
