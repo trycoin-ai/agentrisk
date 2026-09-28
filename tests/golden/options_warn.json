@@ -51,7 +51,7 @@
   },
   "engine": {
     "agentrisk_version": "0.1.2",
-    "classification_data_version": "2026.07"
+    "classification_data_version": "2026.09"
   },
   "evaluated": {
     "action": "buy",

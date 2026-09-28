@@ -14,6 +14,18 @@ All notable changes to AgentRisk are documented here. The format follows
   resolves the current SDK again instead of the 1.x line.
 - The unsupported-SDK startup message names both server modules it looked for
   and the range it supports.
+- `examples/agent_loop.py` derives its option contract's expiry from the current
+  date, a year out on a standard monthly expiry. The fixed date it carried passed
+  in September 2026, so the example was demonstrating an expired contract.
+
+### Changed
+- The bundled classification data is synced to the Nasdaq Trader directory as of
+  September 2026 and stamped `2026.09`: 668 new listings added, 327 delisted
+  symbols removed, 140 names updated, and the 139 curated entries unchanged.
+- `scripts/expand_seed.py` now syncs the base layer instead of only adding to it.
+  Delisted symbols are dropped, changed names are refreshed, curated entries are
+  never touched, and the dataset version is stamped with the year and month of
+  the sync.
 
 ### Added
 - A CI job that installs the newest 1.x SDK, so the older layout stays covered
