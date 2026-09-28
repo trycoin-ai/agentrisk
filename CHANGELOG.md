@@ -6,6 +6,8 @@ All notable changes to AgentRisk are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-09-27
+
 ### Fixed
 - The MCP server runs on the 2.x SDK. That release renamed `FastMCP` to
   `MCPServer` and moved it to `mcp.server.mcpserver`; the adapter now imports
@@ -28,6 +30,10 @@ All notable changes to AgentRisk are documented here. The format follows
   the sync.
 
 ### Added
+- The release workflow publishes to the MCP registry after the PyPI upload
+  succeeds, authenticated as the repository through GitHub OIDC. Registry
+  publication was a manual step before, and the entry had fallen behind the
+  index.
 - A CI job that installs the newest 1.x SDK, so the older layout stays covered
   now that a fresh install resolves 2.x.
 
@@ -134,6 +140,7 @@ All notable changes to AgentRisk are documented here. The format follows
   repository instead of resolving an unpinned name from a package index.
 
 [Unreleased]: https://github.com/trycoin-ai/agentrisk
+[0.1.3]: https://pypi.org/project/agentrisk/0.1.3/
 [0.1.2]: https://pypi.org/project/agentrisk/0.1.2/
 [0.1.1]: https://pypi.org/project/agentrisk/0.1.1/
 [0.1.0]: https://pypi.org/project/agentrisk/0.1.0/
